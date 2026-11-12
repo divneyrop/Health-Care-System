@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'registrations',
 ]
 
+AUTH_USER_MODEL = 'accounts.User'
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
