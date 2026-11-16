@@ -76,6 +76,8 @@
                     </form>
                 </div>
 
+            {% endif %}
+
             {% if selected_role == 'DOCTOR'%}
                 <div class="registration-form-section">
                     <div class="form-section-heading">
@@ -116,9 +118,9 @@
                     {% if form.non_field_errors %}
                         <div class="alert alert-danger registration-alert" role="alert">{{ form.non_field_errors }}</div>
                     {% endif %}
-                    <form method="post" action="{% url 'registration:register' %}?role=DOCTOR" class="registration-form" novalidate>
+                    <form method="post" action="{% url 'registration:register' %}?role=STAFF" class="registration-form" novalidate>
                         {% csrf_token %}
-                        <input type="hidden" name="role" value="DOCTOR">
+                        <input type="hidden" name="role" value="STAFF">
                         <div class="row g-3">
                             {% for field in form %}
                                 <div class="col-md-6">
@@ -131,17 +133,13 @@
                         </div>
                         <div class="registration-submit-row">
                             <p>By creating an account, you agree to use Carewell respectfully and keep your sign-in details secure.</p>
-                            <button type="submit" class="btn btn-primary-soft">Create doctor account <span aria-hidden="true">→</span></button>
+                            <button type="submit" class="btn btn-primary-soft">Create staff account <span aria-hidden="true">→</span></button>
                         </div>
                     </form>
                 </div>
-            <!-- {% elif selected_role == 'DOCTOR' or selected_role == 'STAFF' %}
-                <div class="role-notice" role="status">
-                    <span class="role-notice-icon" aria-hidden="true">i</span>
-                    <div><strong>Care team accounts are organization-managed.</strong><p>To protect patient information, doctor and staff access is arranged through your hospital or Carewell administrator. Please contact your organization’s Carewell administrator to get started.</p></div>
-                </div>
-            {% endif %} -->
 
+            {% endif %}
+            
             <div class="registration-signin">Already have an account? <a href="{% url 'registration:login' %}">Sign in</a></div>
         </div>
         <p class="registration-footnote"><span aria-hidden="true">♥</span> Your health journey is personal. Your care should be, too.</p>
