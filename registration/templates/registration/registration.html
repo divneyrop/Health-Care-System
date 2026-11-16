@@ -1,81 +1,90 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Create Account | Carewell{% endblock %}
+{% block title %}Create an account | Carewell{% endblock %}
 
 {% block content %}
-<section class="page-shell">
+<section class="registration-page">
     <div class="container">
-
-        <div class="text-center mb-5">
+        <div class="registration-heading text-center">
             <span class="eyebrow">Welcome to Carewell</span>
-            <h1 class="page-title mt-3">Healthcare starts with you.</h1>
-            <p class="text-muted-custom">
-                Create your account to access our connected healthcare platform.
-            </p>
+            <h1 class="page-title">A little better care starts here.</h1>
+            <p class="registration-lead">Create an account to make your healthcare experience more connected.</p>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
-
-                <div class="surface-card p-4 p-md-5">
-
-                    <div class="text-center mb-4">
-                        <h2 class="section-title">Create your account</h2>
-                        <p class="text-muted-custom mb-0">
-                            First, tell us how you'll use Carewell.
-                        </p>
-                    </div>
-
-                    <div class="row g-3">
-
-                        <div class="col-md-4">
-                            <button type="button"
-                                    class="role-card w-100"
-                                    data-role="PATIENT">
-                                <span class="role-icon">♙</span>
-                                <span class="role-name">Patient</span>
-                                <span class="role-description">
-                                    Access healthcare services and personal records.
-                                </span>
-                            </button>
-                        </div>
-
-                        <div class="col-md-4">
-                            <button type="button"
-                                    class="role-card w-100"
-                                    data-role="DOCTOR">
-                                <span class="role-icon">✚</span>
-                                <span class="role-name">Doctor</span>
-                                <span class="role-description">
-                                    Manage consultations and clinical records.
-                                </span>
-                            </button>
-                        </div>
-
-                        <div class="col-md-4">
-                            <button type="button"
-                                    class="role-card w-100"
-                                    data-role="STAFF">
-                                <span class="role-icon">▤</span>
-                                <span class="role-name">Hospital Staff</span>
-                                <span class="role-description">
-                                    Support hospital administration and operations.
-                                </span>
-                            </button>
-                        </div>
-
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <p class="text-muted-custom mb-0">
-                            Already have an account?
-                            <a href="/login/" class="fw-bold">Sign in</a>
-                        </p>
-                    </div>
-
+        <div class="registration-panel">
+            <div class="registration-panel-heading">
+                <span class="step-indicator">{% if selected_role %}02{% else %}01{% endif %}<span>/ 02</span></span>
+                <div>
+                    <h2>{% if selected_role == 'PATIENT' %}Create your patient account{% elif selected_role == 'DOCTOR' %}Join Carewell as a doctor{% elif selected_role == 'STAFF' %}Join Carewell as hospital staff{% else %}How will you use Carewell?{% endif %}</h2>
+                    <p>{% if selected_role == 'PATIENT' %}Enter your details below. Your information helps us personalize your experience.{% elif selected_role == 'DOCTOR' or selected_role == 'STAFF' %}Care team accounts are set up with your organization to protect patient information.{% else %}Choose the option that best describes you. You can change your selection at any time.{% endif %}</p>
                 </div>
             </div>
+
+            <div class="row g-3 role-grid">
+                <div class="col-md-4">
+                    <a href="{% url 'registration:register' %}?role=PATIENT" class="role-card{% if selected_role == 'PATIENT' %} is-selected{% endif %}" {% if selected_role == 'PATIENT' %}aria-current="step"{% endif %}>
+                        <span class="role-icon role-icon-patient" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M19 20a7 7 0 0 0-14 0m7-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                        <span class="role-name">Patient</span>
+                        <span class="role-description">Access care services and keep your health journey organized.</span>
+                        <span class="role-card-action">{% if selected_role == 'PATIENT' %}Selected{% else %}Continue as patient{% endif %} <span aria-hidden="true">→</span></span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'registration:register' %}?role=DOCTOR" class="role-card{% if selected_role == 'DOCTOR' %} is-selected{% endif %}" {% if selected_role == 'DOCTOR' %}aria-current="step"{% endif %}>
+                        <span class="role-icon role-icon-doctor" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                        <span class="role-name">Doctor</span>
+                        <span class="role-description">Coordinate consultations and support your patients’ care.</span>
+                        <span class="role-card-action">{% if selected_role == 'DOCTOR' %}Selected{% else %}Continue as doctor{% endif %} <span aria-hidden="true">→</span></span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'registration:register' %}?role=STAFF" class="role-card{% if selected_role == 'STAFF' %} is-selected{% endif %}" {% if selected_role == 'STAFF' %}aria-current="step"{% endif %}>
+                        <span class="role-icon role-icon-staff" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V7l8-4 8 4v13H4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 20v-5h6v5M9 9h.01M15 9h.01M12 9h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                        <span class="role-name">Hospital staff</span>
+                        <span class="role-description">Help your care team deliver a smooth patient experience.</span>
+                        <span class="role-card-action">{% if selected_role == 'STAFF' %}Selected{% else %}Continue as staff{% endif %} <span aria-hidden="true">→</span></span>
+                    </a>
+                </div>
+            </div>
+
+            {% if selected_role == 'PATIENT' %}
+                <div class="registration-form-section">
+                    <div class="form-section-heading">
+                        <span class="eyebrow">Patient details</span>
+                        <h3>Your account information</h3>
+                    </div>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger registration-alert" role="alert">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <form method="post" action="{% url 'registration:register' %}?role=PATIENT" class="registration-form" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="role" value="PATIENT">
+                        <div class="row g-3">
+                            {% for field in form %}
+                                <div class="col-md-6">
+                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+                                    {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="registration-submit-row">
+                            <p>By creating an account, you agree to use Carewell respectfully and keep your sign-in details secure.</p>
+                            <button type="submit" class="btn btn-primary-soft">Create patient account <span aria-hidden="true">→</span></button>
+                        </div>
+                    </form>
+                </div>
+            {% elif selected_role == 'DOCTOR' or selected_role == 'STAFF' %}
+                <div class="role-notice" role="status">
+                    <span class="role-notice-icon" aria-hidden="true">i</span>
+                    <div><strong>Care team accounts are organization-managed.</strong><p>To protect patient information, doctor and staff access is arranged through your hospital or Carewell administrator. Please contact your organization’s Carewell administrator to get started.</p></div>
+                </div>
+            {% endif %}
+
+            <div class="registration-signin">Already have an account? <a href="{% url 'registration:login' %}">Sign in</a></div>
         </div>
+        <p class="registration-footnote"><span aria-hidden="true">♥</span> Your health journey is personal. Your care should be, too.</p>
     </div>
 </section>
 {% endblock %}
