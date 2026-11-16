@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account | Carewell{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="eyebrow">Welcome to Carewell</span>
+            <h1 class="page-title mt-3">Healthcare starts with you.</h1>
+            <p class="text-muted-custom">
+                Create your account to access our connected healthcare platform.
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+
+                <div class="surface-card p-4 p-md-5">
+
+                    <div class="text-center mb-4">
+                        <h2 class="section-title">Create your account</h2>
+                        <p class="text-muted-custom mb-0">
+                            First, tell us how you'll use Carewell.
+                        </p>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <button type="button"
+                                    class="role-card w-100"
+                                    data-role="PATIENT">
+                                <span class="role-icon">♙</span>
+                                <span class="role-name">Patient</span>
+                                <span class="role-description">
+                                    Access healthcare services and personal records.
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="button"
+                                    class="role-card w-100"
+                                    data-role="DOCTOR">
+                                <span class="role-icon">✚</span>
+                                <span class="role-name">Doctor</span>
+                                <span class="role-description">
+                                    Manage consultations and clinical records.
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="button"
+                                    class="role-card w-100"
+                                    data-role="STAFF">
+                                <span class="role-icon">▤</span>
+                                <span class="role-name">Hospital Staff</span>
+                                <span class="role-description">
+                                    Support hospital administration and operations.
+                                </span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted-custom mb-0">
+                            Already have an account?
+                            <a href="/login/" class="fw-bold">Sign in</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

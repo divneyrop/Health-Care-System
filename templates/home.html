@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Carewell | Care that puts you first{% endblock %}
+
+{% block content %}
+<section class="home-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="eyebrow"><span class="hero-status-dot"></span> Your health, supported</span>
+                <h1 class="hero-title">Better care starts with <span>being heard.</span></h1>
+                <p class="hero-copy">Carewell brings trusted healthcare and the people who care for you a little closer. Find the right support, stay on top of your wellbeing, and feel confident at every step.</p>
+                <div class="d-flex flex-wrap align-items-center gap-3 hero-actions">
+                    <a class="btn btn-primary-soft btn-lg" href="{% url 'registration:register' %}">Create your account <span aria-hidden="true">→</span></a>
+                    <a class="hero-secondary-link" href="#services">Explore our services <span aria-hidden="true">↓</span></a>
+                </div>
+                <div class="hero-reassurance">
+                    <span class="reassurance-icon" aria-hidden="true">✓</span>
+                    <span>Care centered around you, every day.</span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <img class="hero-image" src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="A healthcare professional speaking with a patient" fetchpriority="high">
+                    <div class="hero-image-wash" aria-hidden="true"></div>
+                    <div class="care-note-card">
+                        <span class="care-note-icon" aria-hidden="true">♥</span>
+                        <div><strong>Care that connects</strong><span>People, support, and wellbeing</span></div>
+                    </div>
+                    <div class="hero-image-caption"><span class="caption-dot"></span> Here for your health journey</div>
+                    <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+                    <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trust-strip" aria-label="Our approach to care">
+    <div class="container trust-strip-inner">
+        <span class="trust-label">A more thoughtful way to care</span>
+        <span><i aria-hidden="true">✳</i> Patient-first</span>
+        <span><i aria-hidden="true">✳</i> Connected care</span>
+        <span><i aria-hidden="true">✳</i> Support that stays with you</span>
+    </div>
+</section>
+
+<section class="home-section services-section" id="services">
+    <div class="container">
+        <div class="section-heading-row">
+            <div>
+                <span class="eyebrow">Care for real life</span>
+                <h2 class="section-title mt-2 mb-2">Support for every part of your health</h2>
+                <p class="section-intro">Simple ways to get care, stay informed, and feel more in control.</p>
+            </div>
+            <a class="text-link d-none d-md-inline-flex" href="#how-it-works">How Carewell works <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <article class="service-card h-100">
+                    <div class="service-icon service-icon-teal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3v4m8-4v4M4.5 9.5h15M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="m9 15 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <h3>Care coordination</h3>
+                    <p>Keep appointments, care details, and next steps easier to follow in one place.</p>
+                    <a href="{% url 'registration:register' %}" class="service-link">Get started <span aria-hidden="true">→</span></a>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="service-card h-100">
+                    <div class="service-icon service-icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.4-8 11-8 11Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12h2l1.2-2.5 1.6 5 1.1-2.5h1.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <h3>Everyday wellbeing</h3>
+                    <p>Build healthy routines with helpful guidance that meets you where you are.</p>
+                    <a href="{% url 'registration:register' %}" class="service-link">Find your support <span aria-hidden="true">→</span></a>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="service-card h-100">
+                    <div class="service-icon service-icon-peach" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8h6m-6 4h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+                    <h3>Health information</h3>
+                    <p>Make sense of your care with clear information and a dependable place to begin.</p>
+                    <a href="{% url 'registration:register' %}" class="service-link">Learn with Carewell <span aria-hidden="true">→</span></a>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-section about-section" id="how-it-works">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="about-visual">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="A doctor ready to listen and help" loading="lazy">
+                    <div class="about-image-label"><span class="about-label-mark">+</span><span><strong>Care with you in mind</strong><small>Because every health journey is personal</small></span></div>
+                </div>
+            </div>
+            <div class="col-lg-6 about-copy-column">
+                <span class="eyebrow">A little more human</span>
+                <h2 class="section-title about-title">Healthcare should feel like a partnership.</h2>
+                <p class="section-intro">Finding your way through healthcare can feel like a lot. Carewell is here to make the experience feel clearer and more connected, so you can spend less energy navigating care and more time focusing on you.</p>
+                <div class="about-points">
+                    <div class="about-point"><span class="point-check">✓</span><span><strong>Start with what matters to you</strong><small>Your needs and goals come first.</small></span></div>
+                    <div class="about-point"><span class="point-check">✓</span><span><strong>Feel supported along the way</strong><small>Clear next steps make care easier to follow.</small></span></div>
+                    <div class="about-point"><span class="point-check">✓</span><span><strong>Keep your wellbeing in view</strong><small>Small, informed steps can add up.</small></span></div>
+                </div>
+                <a class="btn btn-primary-soft mt-4" href="{% url 'registration:register' %}">Join Carewell <span aria-hidden="true">→</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="closing-cta">
+    <div class="container">
+        <div class="closing-cta-inner">
+            <div><span class="eyebrow">Your next step starts here</span><h2>Make room for better care.</h2><p>Create an account and take the first step with Carewell.</p></div>
+            <a class="btn cta-light-button" href="{% url 'registration:register' %}">Get started <span aria-hidden="true">→</span></a>
+            <span class="cta-decoration cta-decoration-one" aria-hidden="true"></span>
+            <span class="cta-decoration cta-decoration-two" aria-hidden="true"></span>
+        </div>
+    </div>
+</section>
+{% endblock %}

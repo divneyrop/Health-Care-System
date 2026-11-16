@@ -4,6 +4,10 @@ from django.contrib import messages
 from .forms import PatientRegistrationForm
 
 
+def home(request):
+    return render(request, 'home.html')
+
+
 def register(request):
 
     if request.method == 'POST':
@@ -24,6 +28,6 @@ def register(request):
 
     return render(
         request,
-        'registration.html',
+        'registration/registration.html',
         {'form': form}
     )
