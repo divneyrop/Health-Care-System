@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from accounts.models import User
+from accounts.models import AuthorizedHospitalCredential, User
 
 
 class PatientRegistrationForm(UserCreationForm):
@@ -39,6 +39,19 @@ class DoctorRegistrationForm(UserCreationForm):
             'email',
         ]
 
+    def clean_doctor_id(self):
+        doctor_id = self.cleaned_data['doctor_id'].strip().upper()
+        authorized = AuthorizedHospitalCredential.objects.filter(
+            credential_type=AuthorizedHospitalCredential.CredentialType.DOCTOR,
+            credential_code=doctor_id,
+            is_active=True,
+        ).exists()
+        if not authorized:
+            raise forms.ValidationError(
+                'Enter a valid, active hospital doctor ID.'
+            )
+        return doctor_id
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = User.Role.DOCTOR
@@ -62,6 +75,19 @@ class StaffRegistrationForm(UserCreationForm):
             'username',
             'email',
         ]
+
+    def clean_staff_id(self):
+        staff_id = self.cleaned_data['staff_id'].strip().upper()
+        authorized = AuthorizedHospitalCredential.objects.filter(
+            credential_type=AuthorizedHospitalCredential.CredentialType.STAFF,
+            credential_code=staff_id,
+            is_active=True,
+        ).exists()
+        if not authorized:
+            raise forms.ValidationError(
+                'Enter a valid, active hospital staff ID.'
+            )
+        return staff_id
 
     def save(self, commit=True):
         user = super().save(commit=False)
