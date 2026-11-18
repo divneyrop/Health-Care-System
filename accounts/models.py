@@ -33,6 +33,14 @@ class AuthorizedHospitalCredential(models.Model):
     credential_code = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    redeemed_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='redeemed_hospital_credentials',
+    )
+    redeemed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [

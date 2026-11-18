@@ -45,6 +45,7 @@ class DoctorRegistrationForm(UserCreationForm):
             credential_type=AuthorizedHospitalCredential.CredentialType.DOCTOR,
             credential_code=doctor_id,
             is_active=True,
+            redeemed_at__isnull=True,
         ).exists()
         if not authorized:
             raise forms.ValidationError(
@@ -82,6 +83,7 @@ class StaffRegistrationForm(UserCreationForm):
             credential_type=AuthorizedHospitalCredential.CredentialType.STAFF,
             credential_code=staff_id,
             is_active=True,
+            redeemed_at__isnull=True,
         ).exists()
         if not authorized:
             raise forms.ValidationError(

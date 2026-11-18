@@ -24,7 +24,15 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(AuthorizedHospitalCredential)
 class AuthorizedHospitalCredentialAdmin(admin.ModelAdmin):
-    list_display = ('credential_code', 'credential_type', 'is_active', 'created_at')
+    list_display = (
+        'credential_code',
+        'credential_type',
+        'is_active',
+        'redeemed_by',
+        'redeemed_at',
+        'created_at',
+    )
     list_filter = ('credential_type', 'is_active')
     search_fields = ('credential_code',)
     ordering = ('credential_type', 'credential_code')
+    readonly_fields = ('created_at', 'redeemed_by', 'redeemed_at')
