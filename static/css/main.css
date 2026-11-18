@@ -259,8 +259,8 @@ a { text-decoration: none; }
 .auth-title { margin: .55rem 0 .35rem; color: var(--ink); font-family: "Manrope", sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -.05em; }
 .auth-intro { margin-bottom: 1.6rem; color: var(--muted); }
 .auth-form .form-label { color: var(--ink); font-size: .87rem; font-weight: 700; }
-.auth-form .form-control { min-height: 47px; border-color: #dfe7ed; border-radius: .65rem; background-color: #fbfcfd; }
-.auth-form .form-control:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 .2rem rgba(19, 138, 131, .13); }
+.auth-form input { display: block; width: 100%; min-height: 47px; padding: .65rem .8rem; border: 1px solid #dfe7ed; border-radius: .65rem; background-color: #fbfcfd; color: var(--ink); font: inherit; font-size: .92rem; }
+.auth-form input:focus { border-color: var(--brand); outline: 0; background: #fff; box-shadow: 0 0 0 .2rem rgba(19, 138, 131, .13); }
 .auth-submit { min-height: 48px; margin-top: 1.15rem; }
 .auth-error { border: 0; border-radius: .7rem; font-size: .88rem; }
 .auth-switch { margin: 1.3rem 0 0; color: var(--muted); text-align: center; font-size: .9rem; }
@@ -296,9 +296,12 @@ a { text-decoration: none; }
 .registration-form input { display: block; width: 100%; min-height: 46px; padding: .65rem .8rem; border: 1px solid #dfe7ed; border-radius: .65rem; background: #fbfcfd; color: var(--ink); font: inherit; font-size: .9rem; }
 .registration-form input:focus { border-color: var(--brand); outline: 0; background: #fff; box-shadow: 0 0 0 .2rem rgba(19, 138, 131, .13); }
 .registration-form .form-text { color: var(--muted); font-size: .74rem; line-height: 1.45; }
+.registration-form .form-text:empty { display: none; }
 .registration-form .form-text ul { padding-left: 1rem; margin: .35rem 0 0; }
 .registration-form .form-text li + li { margin-top: .18rem; }
 .field-error { margin-top: .35rem; color: #b64242; font-size: .78rem; }
+.field-error ul { margin: 0; padding-left: 1rem; }
+.required-mark { margin-left: .2rem; color: #b64242; }
 .registration-alert { border: 0; border-radius: .7rem; }
 .registration-submit-row { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
 .registration-submit-row p { max-width: 480px; margin: 0; color: var(--muted); font-size: .77rem; line-height: 1.55; }

@@ -8,19 +8,19 @@
         <div class="registration-heading text-center">
             <span class="eyebrow">Welcome to Carewell</span>
             <h1 class="page-title">A little better care starts here.</h1>
-            <p class="registration-lead">Create an account to make your healthcare experience more connected.</p>
+            <p class="registration-lead">Choose how you’re joining Carewell. Your account setup will match your role.</p>
         </div>
 
         <div class="registration-panel">
             <div class="registration-panel-heading">
-                <span class="step-indicator">{% if selected_role %}02{% else %}01{% endif %}<span>/ 02</span></span>
+                <span class="step-indicator" aria-hidden="true">{% if form %}02{% else %}01{% endif %}<span>/ 02</span></span>
                 <div>
-                    <h2>{% if selected_role == 'PATIENT' %}Create your patient account{% elif selected_role == 'DOCTOR' %}Join Carewell as a doctor{% elif selected_role == 'STAFF' %}Join Carewell as hospital staff{% else %}How will you use Carewell?{% endif %}</h2>
-                    <p>{% if selected_role == 'PATIENT' %}Enter your details below. Your information helps us personalize your experience.{% elif selected_role == 'DOCTOR' or selected_role == 'STAFF' %}Care team accounts are set up with your organization to protect patient information.{% else %}Choose the option that best describes you. You can change your selection at any time.{% endif %}</p>
+                    <h2>{% if selected_role == 'PATIENT' %}Create your patient account{% elif selected_role == 'DOCTOR' %}Join Carewell as a doctor{% elif selected_role == 'STAFF' %}Join Carewell as hospital staff{% elif selected_role %}Choose an account type{% else %}How will you use Carewell?{% endif %}</h2>
+                    <p>{% if selected_role == 'PATIENT' %}Create an account to access care services and keep your health journey organized.{% elif selected_role == 'DOCTOR' or selected_role == 'STAFF' %}Professional accounts require a valid hospital-issued ID so access stays with the care team.{% elif selected_role %}That account type isn’t available. Choose one of the options below to continue.{% else %}Select the option that best describes you to get started.{% endif %}</p>
                 </div>
             </div>
 
-            <div class="row g-3 role-grid">
+            <div class="row g-3 role-grid" role="group" aria-label="Choose your account type">
                 <div class="col-md-4">
                     <a href="{% url 'registration:register' %}?role=PATIENT" class="role-card{% if selected_role == 'PATIENT' %} is-selected{% endif %}" {% if selected_role == 'PATIENT' %}aria-current="step"{% endif %}>
                         <span class="role-icon role-icon-patient" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M19 20a7 7 0 0 0-14 0m7-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
@@ -47,99 +47,56 @@
                 </div>
             </div>
 
-            {% if selected_role == 'PATIENT' %}
+            {% if selected_role == 'DOCTOR' or selected_role == 'STAFF' %}
+                <aside class="role-notice" aria-label="Professional account requirements">
+                    <span class="role-notice-icon" aria-hidden="true">i</span>
+                    <div>
+                        <strong>Have your hospital ID ready</strong>
+                        <p>Enter the ID issued to you by the hospital. Each ID can be used once. If you don’t have one or think it has already been used, contact your hospital administrator. Patients can create an account without a hospital ID.</p>
+                    </div>
+                </aside>
+            {% endif %}
+
+            {% if selected_role and not form %}
+                <div class="alert alert-warning registration-alert mt-4" role="alert">Choose Patient, Doctor, or Hospital staff above to continue.</div>
+            {% endif %}
+
+            {% if form %}
                 <div class="registration-form-section">
                     <div class="form-section-heading">
-                        <span class="eyebrow">Patient details</span>
+                        <span class="eyebrow">{% if selected_role == 'PATIENT' %}Patient details{% elif selected_role == 'DOCTOR' %}Doctor details{% else %}Staff details{% endif %}</span>
                         <h3>Your account information</h3>
                     </div>
+
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger registration-alert" role="alert">{{ form.non_field_errors }}</div>
+                        <div class="alert alert-danger registration-alert" role="alert" aria-live="assertive">
+                            {{ form.non_field_errors }}
+                        </div>
                     {% endif %}
-                    <form method="post" action="{% url 'registration:register' %}?role=PATIENT" class="registration-form" novalidate>
+
+                    <form method="post" action="{% url 'registration:register' %}?role={{ selected_role }}" class="registration-form">
                         {% csrf_token %}
-                        <input type="hidden" name="role" value="PATIENT">
+                        <input type="hidden" name="role" value="{{ selected_role }}">
                         <div class="row g-3">
                             {% for field in form %}
                                 <div class="col-md-6">
-                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark" aria-hidden="true">*</span>{% endif %}</label>
                                     {{ field }}
-                                    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
-                                    {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                                    <div class="form-text" id="{{ field.id_for_label }}-help">{% if field.help_text %}{{ field.help_text|safe }}{% elif field.name == 'doctor_id' or field.name == 'staff_id' %}Use the ID provided by your hospital administrator.{% endif %}</div>
+                                    {% if field.errors %}
+                                        <div class="field-error" id="{{ field.id_for_label }}-errors" role="alert">{{ field.errors }}</div>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="registration-submit-row">
-                            <p>By creating an account, you agree to use Carewell respectfully and keep your sign-in details secure.</p>
-                            <button type="submit" class="btn btn-primary-soft">Create patient account <span aria-hidden="true">→</span></button>
+                            <p>Fields marked <span aria-hidden="true">*</span> are required. Your sign-in details should be kept private.</p>
+                            <button type="submit" class="btn btn-primary-soft">Create {% if selected_role == 'PATIENT' %}patient{% elif selected_role == 'DOCTOR' %}doctor{% else %}staff{% endif %} account <span aria-hidden="true">→</span></button>
                         </div>
                     </form>
                 </div>
-
             {% endif %}
 
-            {% if selected_role == 'DOCTOR'%}
-                <div class="registration-form-section">
-                    <div class="form-section-heading">
-                        <span class="eyebrow">Doctor details</span>
-                        <h3>Your account information</h3>
-                    </div>
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger registration-alert" role="alert">{{ form.non_field_errors }}</div>
-                    {% endif %}
-                    <form method="post" action="{% url 'registration:register' %}?role=DOCTOR" class="registration-form" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="role" value="DOCTOR">
-                        <div class="row g-3">
-                            {% for field in form %}
-                                <div class="col-md-6">
-                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                    {{ field }}
-                                    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
-                                    {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="registration-submit-row">
-                            <p>By creating an account, you agree to use Carewell respectfully and keep your sign-in details secure.</p>
-                            <button type="submit" class="btn btn-primary-soft">Create doctor account <span aria-hidden="true">→</span></button>
-                        </div>
-                    </form>
-                </div>
-
-            {% endif %}
-
-            {% if selected_role == 'STAFF' %}
-                <div class="registration-form-section">
-                     <div class="form-section-heading">
-                        <span class="eyebrow">Staff details</span>
-                        <h3>Your account information</h3>
-                    </div>
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger registration-alert" role="alert">{{ form.non_field_errors }}</div>
-                    {% endif %}
-                    <form method="post" action="{% url 'registration:register' %}?role=STAFF" class="registration-form" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="role" value="STAFF">
-                        <div class="row g-3">
-                            {% for field in form %}
-                                <div class="col-md-6">
-                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                    {{ field }}
-                                    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
-                                    {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="registration-submit-row">
-                            <p>By creating an account, you agree to use Carewell respectfully and keep your sign-in details secure.</p>
-                            <button type="submit" class="btn btn-primary-soft">Create staff account <span aria-hidden="true">→</span></button>
-                        </div>
-                    </form>
-                </div>
-
-            {% endif %}
-            
             <div class="registration-signin">Already have an account? <a href="{% url 'registration:login' %}">Sign in</a></div>
         </div>
         <p class="registration-footnote"><span aria-hidden="true">♥</span> Your health journey is personal. Your care should be, too.</p>

@@ -12,27 +12,26 @@
             <p class="auth-intro">Sign in to continue your Carewell journey.</p>
 
             {% if form.errors %}
-                <div class="alert alert-danger auth-error" role="alert">Your username or password didn’t match. Please try again.</div>
+                <div class="alert alert-danger auth-error" role="alert" aria-live="assertive">Your username or password didn’t match. Please try again.</div>
             {% endif %}
             {% if next %}
                 {% if user.is_authenticated %}
                     <div class="alert alert-warning auth-error" role="alert">Your account doesn’t have access to that page. Sign in with another account.</div>
                 {% else %}
-                    <div class="alert alert-info auth-error" role="alert">Please sign in to continue.</div>
+                    <div class="alert alert-info auth-error" role="status">Please sign in to continue.</div>
                 {% endif %}
             {% endif %}
 
             <form method="post" action="{% url 'registration:login' %}" class="auth-form">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
-                <div class="mb-3">
-                    <label class="form-label" for="id_username">Username</label>
-                    <input class="form-control" type="text" name="username" id="id_username" autocomplete="username" required autofocus>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label" for="id_password">Password</label>
-                    <input class="form-control" type="password" name="password" id="id_password" autocomplete="current-password" required>
-                </div>
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="field-error" role="alert">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endfor %}
                 <button class="btn btn-primary-soft w-100 auth-submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
             </form>
             <p class="auth-switch">New to Carewell? <a href="{% url 'registration:register' %}">Create an account</a></p>
