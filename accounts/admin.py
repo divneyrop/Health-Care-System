@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import AuthorizedHospitalCredential, User
 
 
 @admin.register(User)
@@ -20,3 +20,11 @@ class CustomUserAdmin(UserAdmin):
         'is_active',
         'is_staff',
     )
+
+
+@admin.register(AuthorizedHospitalCredential)
+class AuthorizedHospitalCredentialAdmin(admin.ModelAdmin):
+    list_display = ('credential_code', 'credential_type', 'is_active', 'created_at')
+    list_filter = ('credential_type', 'is_active')
+    search_fields = ('credential_code',)
+    ordering = ('credential_type', 'credential_code')
