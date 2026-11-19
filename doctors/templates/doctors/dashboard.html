@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor dashboard | Carewell{% endblock %}
+
+{% block content %}
+<section class="doctor-dashboard patient-dashboard">
+    <div class="container">
+        <div class="dashboard-welcome">
+            <div>
+                <span class="eyebrow">Care team workspace</span>
+                <h1>Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% else %} to your workspace{% endif %}.</h1>
+                <p>Your clinical workspace for coordinating care. Patient and appointment tools will appear here as they are added to Carewell.</p>
+            </div>
+            <span class="dashboard-status"><span aria-hidden="true"></span> Doctor account</span>
+        </div>
+
+        <div class="row g-4 dashboard-layout">
+            <div class="col-lg-7">
+                <section class="dashboard-card dashboard-services" aria-labelledby="workspace-title">
+                    <div class="dashboard-card-heading">
+                        <div>
+                            <span class="eyebrow">Clinical workspace</span>
+                            <h2 id="workspace-title">Your care team tools</h2>
+                        </div>
+                    </div>
+                    <p class="dashboard-card-intro">This workspace is ready for your clinical workflow. No patient records or appointment data are connected yet.</p>
+
+                    <div class="dashboard-service-list">
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-blue" aria-hidden="true">01</span>
+                            <div><h3>Appointments</h3><p>Review your schedule and manage patient visits.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-teal" aria-hidden="true">02</span>
+                            <div><h3>Patient list</h3><p>Open the records for patients under your care.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-peach" aria-hidden="true">03</span>
+                            <div><h3>Clinical notes</h3><p>Document visits and coordinate follow-up care.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-5">
+                <section class="dashboard-card account-card" id="account" aria-labelledby="account-title">
+                    <div class="dashboard-card-heading">
+                        <div>
+                            <span class="eyebrow">Account details</span>
+                            <h2 id="account-title">Your profile</h2>
+                        </div>
+                        <span class="account-avatar" aria-hidden="true">{{ request.user.first_name|default:request.user.username|first|upper }}</span>
+                    </div>
+                    <dl class="account-details">
+                        <div><dt>Name</dt><dd>{{ request.user.get_full_name|default:request.user.username }}</dd></div>
+                        <div><dt>Username</dt><dd>{{ request.user.username }}</dd></div>
+                        <div><dt>Email</dt><dd>{{ request.user.email }}</dd></div>
+                        <div><dt>Account type</dt><dd>Doctor</dd></div>
+                    </dl>
+                    <p class="account-note">Need to update your account details? Contact the hospital administrator for help.</p>
+                </section>
+
+                <aside class="dashboard-help-card">
+                    <span class="help-card-mark" aria-hidden="true">?</span>
+                    <div>
+                        <h2>Need help?</h2>
+                        <p>For account or access support, contact your hospital administrator.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
