@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Patient dashboard | Carewell{% endblock %}
+
+{% block content %}
+<section class="patient-dashboard">
+    <div class="container">
+        <div class="dashboard-welcome">
+            <div>
+                <span class="eyebrow">Your Carewell account</span>
+                <h1>Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% else %} back{% endif %}.</h1>
+                <p>This is your personal space to keep track of your care as Carewell services become available.</p>
+            </div>
+            <span class="dashboard-status"><span aria-hidden="true"></span> Patient account</span>
+        </div>
+
+        <div class="row g-4 dashboard-layout">
+            <div class="col-lg-7">
+                <section class="dashboard-card dashboard-services" aria-labelledby="services-title">
+                    <div class="dashboard-card-heading">
+                        <div>
+                            <span class="eyebrow">Care services</span>
+                            <h2 id="services-title">Your care, in one place</h2>
+                        </div>
+                    </div>
+                    <p class="dashboard-card-intro">Appointment booking, health records, and prescriptions will appear here when they are connected to your account.</p>
+
+                    <div class="dashboard-service-list">
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-blue" aria-hidden="true">01</span>
+                            <div><h3>Appointments</h3><p>Manage upcoming visits and review past appointments.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-teal" aria-hidden="true">02</span>
+                            <div><h3>Health records</h3><p>Keep important care information together.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                        <article class="dashboard-service-item">
+                            <span class="dashboard-service-icon service-icon-peach" aria-hidden="true">03</span>
+                            <div><h3>Prescriptions</h3><p>Review medication information shared by your care team.</p></div>
+                            <span class="service-status">Coming soon</span>
+                        </article>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-5">
+                <section class="dashboard-card account-card" id="account" aria-labelledby="account-title">
+                    <div class="dashboard-card-heading">
+                        <div>
+                            <span class="eyebrow">Account details</span>
+                            <h2 id="account-title">Your profile</h2>
+                        </div>
+                        <span class="account-avatar" aria-hidden="true">{{ request.user.first_name|default:request.user.username|first|upper }}</span>
+                    </div>
+                    <dl class="account-details">
+                        <div><dt>Name</dt><dd>{{ request.user.get_full_name|default:request.user.username }}</dd></div>
+                        <div><dt>Username</dt><dd>{{ request.user.username }}</dd></div>
+                        <div><dt>Email</dt><dd>{{ request.user.email }}</dd></div>
+                    </dl>
+                    <p class="account-note">Need to update your account details? Contact the Carewell team for help.</p>
+                </section>
+
+                <aside class="dashboard-help-card">
+                    <span class="help-card-mark" aria-hidden="true">?</span>
+                    <div>
+                        <h2>Need help?</h2>
+                        <p>If you need assistance with your account, please contact your care team.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
