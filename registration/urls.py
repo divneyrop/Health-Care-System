@@ -8,7 +8,7 @@ app_name = 'registration'
 urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(
+    path('login/', views.RoleBasedLoginView.as_view(
         template_name='registration/login.html',
         redirect_authenticated_user=True,
         next_page='registration:home',

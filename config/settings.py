@@ -55,6 +55,7 @@ MIDDLEWARE = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = 'registration:login'
 
 ROOT_URLCONF = 'config.urls'
 

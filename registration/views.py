@@ -1,10 +1,19 @@
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.db import transaction
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
-from accounts.models import AuthorizedHospitalCredential
+from accounts.models import AuthorizedHospitalCredential, User
 from .forms import DoctorRegistrationForm, PatientRegistrationForm, StaffRegistrationForm
+
+
+class RoleBasedLoginView(auth_views.LoginView):
+    def get_default_redirect_url(self):
+        if self.request.user.role == User.Role.DOCTOR:
+            return reverse('doctors:dashboard')
+        return super().get_default_redirect_url()
 
 
 def home(request):

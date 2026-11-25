@@ -136,3 +136,36 @@ class RegistrationCredentialTests(TestCase):
         self.assertEqual(existing_staff.role, User.Role.STAFF)
         self.assertTrue(existing_staff.is_staff)
         self.assertTrue(existing_staff.is_active)
+
+    def test_doctor_sign_in_redirects_to_doctor_dashboard(self):
+        User.objects.create_user(
+            username='doctor-login',
+            email='doctor-login@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.DOCTOR,
+        )
+
+        response = self.client.post(
+            reverse('registration:login'),
+            {
+                'username': 'doctor-login',
+                'password': 'Carewell-test-Pass-482!',
+            },
+        )
+
+        self.assertRedirects(response, reverse('doctors:dashboard'))
+        self.assertContains(
+            self.client.get(reverse('doctors:dashboard')),
+            'Care team workspace',
+        )
+
+    def test_anonymous_user_is_redirected_to_sign_in_before_doctor_dashboard(self):
+        dashboard_url = reverse('doctors:dashboard')
+
+        response = self.client.get(dashboard_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("registration:login")}?next={dashboard_url}',
+        )
+        self.assertContains(self.client.get(response.url), 'Sign in')
