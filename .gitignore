@@ -32,6 +32,7 @@ htmlcov/
 .pytest_cache/
 .tox/
 .nox/
+.csv
 
 # Type checking and linting
 .mypy_cache/
@@ -59,3 +60,5 @@ Desktop.ini
 *.tmp
 *.bak
 *.swp
+
+AGENTS.md
