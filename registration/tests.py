@@ -159,6 +159,28 @@ class RegistrationCredentialTests(TestCase):
             'Care team workspace',
         )
 
+    def test_staff_sign_in_redirects_to_staff_dashboard(self):
+        User.objects.create_user(
+            username='staff-login',
+            email='staff-login@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.STAFF,
+        )
+
+        response = self.client.post(
+            reverse('registration:login'),
+            {
+                'username': 'staff-login',
+                'password': 'Carewell-test-Pass-482!',
+            },
+        )
+
+        self.assertRedirects(response, reverse('hospital_staff:dashboard'))
+        self.assertContains(
+            self.client.get(reverse('hospital_staff:dashboard')),
+            'Hospital workspace',
+        )
+
     def test_anonymous_user_is_redirected_to_sign_in_before_doctor_dashboard(self):
         dashboard_url = reverse('doctors:dashboard')
 

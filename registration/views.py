@@ -13,6 +13,8 @@ class RoleBasedLoginView(auth_views.LoginView):
     def get_default_redirect_url(self):
         if self.request.user.role == User.Role.DOCTOR:
             return reverse('doctors:dashboard')
+        if self.request.user.role == User.Role.STAFF:
+            return reverse('hospital_staff:dashboard')
         return super().get_default_redirect_url()
 
 
