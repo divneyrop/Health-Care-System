@@ -115,6 +115,7 @@ class PatientDashboardTests(TestCase):
             role=User.Role.PATIENT,
         )
         self.dashboard_url = reverse('patients:dashboard')
+        self.profile_url = reverse('patients:profile')
 
     def create_patient_record(self, **overrides):
         values = {
@@ -127,7 +128,18 @@ class PatientDashboardTests(TestCase):
         values.update(overrides)
         return Patient.objects.create(**values)
 
-    def test_dashboard_shows_only_the_signed_in_patients_linked_record(self):
+    def test_dashboard_links_to_a_separate_profile_page(self):
+        own_record = self.create_patient_record()
+        self.client.force_login(self.user)
+        response = self.client.get(self.dashboard_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Welcome, Portal.')
+        self.assertContains(response, 'View my profile')
+        self.assertContains(response, f'href="{self.profile_url}"')
+        self.assertNotContains(response, own_record.medical_record_number)
+
+    def test_profile_shows_only_the_signed_in_patients_linked_record(self):
         own_record = self.create_patient_record()
         other_user = User.objects.create_user(
             username='another-patient',
@@ -142,12 +154,12 @@ class PatientDashboardTests(TestCase):
             registered_contact='555-0101',
             portal_account=other_user,
         )
-
         self.client.force_login(self.user)
-        response = self.client.get(self.dashboard_url)
+
+        response = self.client.get(self.profile_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Welcome, Portal.')
+        self.assertContains(response, 'My profile')
         self.assertContains(response, 'Portal Patient')
         self.assertContains(response, own_record.medical_record_number)
         self.assertContains(response, 'Read-only')
@@ -160,8 +172,18 @@ class PatientDashboardTests(TestCase):
         response = self.client.get(self.dashboard_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'No patient record is linked')
         self.assertContains(response, 'Care activity isn’t available here yet')
+        self.assertContains(response, 'Account only')
+        self.assertNotContains(response, 'No patient record is linked')
+
+    def test_profile_shows_empty_state_when_no_record_is_linked(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.profile_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No patient record is linked')
+        self.assertContains(response, 'portal-patient@example.test')
         self.assertNotContains(response, 'Medical record number')
 
     def test_dashboard_requires_authentication(self):
@@ -170,6 +192,14 @@ class PatientDashboardTests(TestCase):
         self.assertRedirects(
             response,
             f'{reverse("registration:login")}?next={self.dashboard_url}',
+        )
+
+    def test_profile_requires_authentication(self):
+        response = self.client.get(self.profile_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("registration:login")}?next={self.profile_url}',
         )
 
     def test_dashboard_rejects_non_patient_roles(self):
@@ -184,3 +214,27 @@ class PatientDashboardTests(TestCase):
         response = self.client.get(self.dashboard_url)
 
         self.assertRedirects(response, reverse('registration:home'))
+
+    def test_profile_rejects_non_patient_roles(self):
+        doctor = User.objects.create_user(
+            username='profile-doctor',
+            email='profile-doctor@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.DOCTOR,
+        )
+        self.client.force_login(doctor)
+
+        response = self.client.get(self.profile_url)
+
+        self.assertRedirects(response, reverse('registration:home'))
+
+    def test_profile_navigation_marks_the_current_page(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.profile_url)
+
+        self.assertContains(
+            response,
+            f'href="{self.profile_url}" aria-current="page">My profile</a>',
+        )
+        self.assertContains(response, f'href="{self.dashboard_url}">Dashboard</a>')

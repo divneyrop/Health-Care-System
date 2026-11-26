@@ -3,21 +3,20 @@
 {% block title %}Patient workspace | Carewell{% endblock %}
 
 {% block content %}
-{% with patient_record=request.user.patient_record %}
 <section class="patient-dashboard patient-portal">
     <div class="container">
         <header class="patient-portal__welcome">
             <div>
                 <span class="eyebrow">Patient workspace</span>
                 <h1>Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% else %} back{% endif %}.</h1>
-                <p>Your personal Carewell space for account and linked profile information.</p>
+                <p>Your personal Carewell space for an overview of your care and profile.</p>
             </div>
             <span class="patient-portal__status"><span aria-hidden="true"></span> Private workspace</span>
         </header>
 
         <div class="row g-4 patient-portal__layout">
             <div class="col-lg-7">
-                <section class="patient-portal__card" id="overview" aria-labelledby="care-overview-title">
+                <section class="patient-portal__card" aria-labelledby="care-overview-title">
                     <div class="patient-portal__card-heading">
                         <div>
                             <span class="eyebrow">Your care</span>
@@ -39,60 +38,30 @@
             </div>
 
             <div class="col-lg-5">
-                <section class="patient-portal__card" id="account" aria-labelledby="profile-title">
+                <section class="patient-portal__card patient-portal__profile-summary" aria-labelledby="profile-summary-title">
                     <div class="patient-portal__card-heading">
                         <div>
                             <span class="eyebrow">My profile</span>
-                            <h2 id="profile-title">Profile information</h2>
+                            <h2 id="profile-summary-title">Your details</h2>
                         </div>
-                        <span class="patient-portal__read-only">Read-only</span>
+                        {% if patient_record %}
+                            <span class="patient-portal__read-only">Record linked</span>
+                        {% else %}
+                            <span class="patient-portal__read-only">Account only</span>
+                        {% endif %}
                     </div>
 
-                    <dl class="patient-portal__details">
-                        <div>
-                            <dt>Account name</dt>
-                            <dd>{{ request.user.get_full_name|default:request.user.username }}</dd>
-                        </div>
-                        <div>
-                            <dt>Account email</dt>
-                            <dd>{{ request.user.email }}</dd>
-                        </div>
-                    </dl>
-
-                    {% if patient_record %}
-                        <div class="patient-portal__record">
-                            <h3>Linked patient record</h3>
-                            <dl class="patient-portal__details">
-                                <div>
-                                    <dt>Legal name</dt>
-                                    <dd>{{ patient_record.full_legal_name }}</dd>
-                                </div>
-                                <div>
-                                    <dt>Date of birth</dt>
-                                    <dd>{{ patient_record.date_of_birth|date:"F j, Y" }}</dd>
-                                </div>
-                                <div>
-                                    <dt>Registered {{ patient_record.get_registered_contact_type_display|lower }}</dt>
-                                    <dd>{{ patient_record.registered_contact }}</dd>
-                                </div>
-                                <div>
-                                    <dt>Medical record number</dt>
-                                    <dd>{{ patient_record.medical_record_number }}</dd>
-                                </div>
-                            </dl>
-                        </div>
-                    {% else %}
-                        <div class="patient-portal__record-empty" role="status">
-                            <h3>No patient record is linked</h3>
-                            <p>Your account is active, but a patient record is not linked to it. Patient demographics and a medical record number cannot be shown here yet.</p>
-                        </div>
-                    {% endif %}
-
-                    <p class="patient-portal__note">Profile details are read-only in this portal. Profile editing and clinical record workflows are not available here.</p>
+                    <p class="patient-portal__profile-summary-copy">
+                        {% if patient_record %}
+                            Review your account details and linked patient record.
+                        {% else %}
+                            Your account is active, but no patient record is linked yet.
+                        {% endif %}
+                    </p>
+                    <a class="btn btn-primary-soft patient-portal__profile-link" href="{% url 'patients:profile' %}">View my profile <span aria-hidden="true">→</span></a>
                 </section>
             </div>
         </div>
     </div>
 </section>
-{% endwith %}
 {% endblock %}

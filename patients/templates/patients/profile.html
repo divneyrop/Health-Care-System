@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My profile | Carewell{% endblock %}
+
+{% block content %}
+<section class="patient-dashboard patient-portal">
+    <div class="container">
+        <header class="patient-portal__welcome">
+            <div>
+                <span class="eyebrow">Patient workspace</span>
+                <h1>My profile</h1>
+                <p>Review your account details and any patient record linked to your account.</p>
+            </div>
+            <a class="btn btn-outline-primary-soft patient-portal__back-link" href="{% url 'patients:dashboard' %}">← Dashboard</a>
+        </header>
+
+        <section class="patient-portal__card patient-portal__profile-page" aria-labelledby="profile-title">
+            <div class="patient-portal__card-heading">
+                <div>
+                    <span class="eyebrow">Account and patient record</span>
+                    <h2 id="profile-title">Profile information</h2>
+                </div>
+                <span class="patient-portal__read-only">Read-only</span>
+            </div>
+
+            <dl class="patient-portal__details">
+                <div>
+                    <dt>Account name</dt>
+                    <dd>{{ request.user.get_full_name|default:request.user.username }}</dd>
+                </div>
+                <div>
+                    <dt>Account email</dt>
+                    <dd>{{ request.user.email }}</dd>
+                </div>
+            </dl>
+
+            {% if patient_record %}
+                <div class="patient-portal__record">
+                    <h3>Linked patient record</h3>
+                    <dl class="patient-portal__details">
+                        <div>
+                            <dt>Legal name</dt>
+                            <dd>{{ patient_record.full_legal_name }}</dd>
+                        </div>
+                        <div>
+                            <dt>Date of birth</dt>
+                            <dd>{{ patient_record.date_of_birth|date:"F j, Y" }}</dd>
+                        </div>
+                        <div>
+                            <dt>Registered {{ patient_record.get_registered_contact_type_display|lower }}</dt>
+                            <dd>{{ patient_record.registered_contact }}</dd>
+                        </div>
+                        <div>
+                            <dt>Medical record number</dt>
+                            <dd>{{ patient_record.medical_record_number }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            {% else %}
+                <div class="patient-portal__record-empty" role="status">
+                    <h3>No patient record is linked</h3>
+                    <p>Your account is active, but a patient record is not linked to it. Patient demographics and a medical record number cannot be shown here yet.</p>
+                </div>
+            {% endif %}
+
+            <p class="patient-portal__note">Profile details are read-only in this portal. Profile editing and clinical record workflows are not available here.</p>
+        </section>
+    </div>
+</section>
+{% endblock %}

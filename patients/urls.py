@@ -6,4 +6,5 @@ app_name = 'patients'
 
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('profile/', views.profile, name='profile'),
 ]

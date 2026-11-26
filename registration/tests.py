@@ -276,11 +276,14 @@ class SharedNavigationTests(TestCase):
                 response,
                 f'href="{dashboard_url}" aria-current="page">Dashboard</a>',
             )
-            profile_label = 'My profile' if role == User.Role.PATIENT else 'Profile'
-            self.assertContains(
-                response,
-                f'href="{dashboard_url}#account">{profile_label}</a>',
-            )
+            if role == User.Role.PATIENT:
+                profile_url = reverse('patients:profile')
+                self.assertContains(
+                    response,
+                    f'href="{profile_url}">My profile</a>',
+                )
+            else:
+                self.assertContains(response, f'href="{dashboard_url}#account">Profile</a>')
             self.assertContains(response, 'Sign out')
             self.assertNotContains(response, 'Get started')
             self.assertNotContains(response, 'My account')

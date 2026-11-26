@@ -368,6 +368,11 @@ a { text-decoration: none; }
 .patient-portal__record-empty { margin-top: 1.35rem; padding: 1rem; border: 1px solid #dcecef; border-radius: .8rem; background: #f4fafb; }
 .patient-portal__record-empty p, .patient-portal__note { margin: .4rem 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
 .patient-portal__note { margin-top: 1rem; padding: .8rem .9rem; border-radius: .7rem; background: #f5f8fa; }
+.patient-portal__profile-summary { height: auto; }
+.patient-portal__profile-summary-copy { margin: 1rem 0 1.2rem; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+.patient-portal__profile-link { display: inline-flex; align-items: center; gap: .45rem; }
+.patient-portal__profile-page { max-width: 820px; margin: 0 auto; }
+.patient-portal__back-link { flex: 0 0 auto; }
 
 @media (max-width: 767.98px) {
     .home-hero { padding-top: 3rem; }
