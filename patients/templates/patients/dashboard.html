@@ -1,76 +1,98 @@
 {% extends "base.html" %}
 
-{% block title %}Patient dashboard | Carewell{% endblock %}
+{% block title %}Patient workspace | Carewell{% endblock %}
 
 {% block content %}
-<section class="patient-dashboard">
+{% with patient_record=request.user.patient_record %}
+<section class="patient-dashboard patient-portal">
     <div class="container">
-        <div class="dashboard-welcome">
+        <header class="patient-portal__welcome">
             <div>
-                <span class="eyebrow">Your Carewell account</span>
+                <span class="eyebrow">Patient workspace</span>
                 <h1>Welcome{% if request.user.first_name %}, {{ request.user.first_name }}{% else %} back{% endif %}.</h1>
-                <p>This is your personal space to keep track of your care as Carewell services become available.</p>
+                <p>Your personal Carewell space for account and linked profile information.</p>
             </div>
-            <span class="dashboard-status"><span aria-hidden="true"></span> Patient account</span>
-        </div>
+            <span class="patient-portal__status"><span aria-hidden="true"></span> Private workspace</span>
+        </header>
 
-        <div class="row g-4 dashboard-layout">
+        <div class="row g-4 patient-portal__layout">
             <div class="col-lg-7">
-                <section class="dashboard-card dashboard-services" aria-labelledby="services-title">
-                    <div class="dashboard-card-heading">
+                <section class="patient-portal__card" id="overview" aria-labelledby="care-overview-title">
+                    <div class="patient-portal__card-heading">
                         <div>
-                            <span class="eyebrow">Care services</span>
-                            <h2 id="services-title">Your care, in one place</h2>
+                            <span class="eyebrow">Your care</span>
+                            <h2 id="care-overview-title">Care overview</h2>
                         </div>
                     </div>
-                    <p class="dashboard-card-intro">Appointment booking, health records, and prescriptions will appear here when they are connected to your account.</p>
 
-                    <div class="dashboard-service-list">
-                        <article class="dashboard-service-item">
-                            <span class="dashboard-service-icon service-icon-blue" aria-hidden="true">01</span>
-                            <div><h3>Appointments</h3><p>Manage upcoming visits and review past appointments.</p></div>
-                            <span class="service-status">Coming soon</span>
-                        </article>
-                        <article class="dashboard-service-item">
-                            <span class="dashboard-service-icon service-icon-teal" aria-hidden="true">02</span>
-                            <div><h3>Health records</h3><p>Keep important care information together.</p></div>
-                            <span class="service-status">Coming soon</span>
-                        </article>
-                        <article class="dashboard-service-item">
-                            <span class="dashboard-service-icon service-icon-peach" aria-hidden="true">03</span>
-                            <div><h3>Prescriptions</h3><p>Review medication information shared by your care team.</p></div>
-                            <span class="service-status">Coming soon</span>
-                        </article>
+                    <div class="patient-portal__empty-state" role="status">
+                        <span class="patient-portal__empty-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M12 21s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.4-8 11-8 11Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.5 12h2l1.2-2.5 1.6 5 1.1-2.5h1.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <h3>Care activity isn’t available here yet</h3>
+                        <p>Appointments, medical records, prescriptions, laboratory results, and notifications are not connected to the patient portal yet.</p>
                     </div>
                 </section>
             </div>
 
             <div class="col-lg-5">
-                <section class="dashboard-card account-card" id="account" aria-labelledby="account-title">
-                    <div class="dashboard-card-heading">
+                <section class="patient-portal__card" id="account" aria-labelledby="profile-title">
+                    <div class="patient-portal__card-heading">
                         <div>
-                            <span class="eyebrow">Account details</span>
-                            <h2 id="account-title">Your profile</h2>
+                            <span class="eyebrow">My profile</span>
+                            <h2 id="profile-title">Profile information</h2>
                         </div>
-                        <span class="account-avatar" aria-hidden="true">{{ request.user.first_name|default:request.user.username|first|upper }}</span>
+                        <span class="patient-portal__read-only">Read-only</span>
                     </div>
-                    <dl class="account-details">
-                        <div><dt>Name</dt><dd>{{ request.user.get_full_name|default:request.user.username }}</dd></div>
-                        <div><dt>Username</dt><dd>{{ request.user.username }}</dd></div>
-                        <div><dt>Email</dt><dd>{{ request.user.email }}</dd></div>
-                    </dl>
-                    <p class="account-note">Need to update your account details? Contact the Carewell team for help.</p>
-                </section>
 
-                <aside class="dashboard-help-card">
-                    <span class="help-card-mark" aria-hidden="true">?</span>
-                    <div>
-                        <h2>Need help?</h2>
-                        <p>If you need assistance with your account, please contact your care team.</p>
-                    </div>
-                </aside>
+                    <dl class="patient-portal__details">
+                        <div>
+                            <dt>Account name</dt>
+                            <dd>{{ request.user.get_full_name|default:request.user.username }}</dd>
+                        </div>
+                        <div>
+                            <dt>Account email</dt>
+                            <dd>{{ request.user.email }}</dd>
+                        </div>
+                    </dl>
+
+                    {% if patient_record %}
+                        <div class="patient-portal__record">
+                            <h3>Linked patient record</h3>
+                            <dl class="patient-portal__details">
+                                <div>
+                                    <dt>Legal name</dt>
+                                    <dd>{{ patient_record.full_legal_name }}</dd>
+                                </div>
+                                <div>
+                                    <dt>Date of birth</dt>
+                                    <dd>{{ patient_record.date_of_birth|date:"F j, Y" }}</dd>
+                                </div>
+                                <div>
+                                    <dt>Registered {{ patient_record.get_registered_contact_type_display|lower }}</dt>
+                                    <dd>{{ patient_record.registered_contact }}</dd>
+                                </div>
+                                <div>
+                                    <dt>Medical record number</dt>
+                                    <dd>{{ patient_record.medical_record_number }}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    {% else %}
+                        <div class="patient-portal__record-empty" role="status">
+                            <h3>No patient record is linked</h3>
+                            <p>Your account is active, but a patient record is not linked to it. Patient demographics and a medical record number cannot be shown here yet.</p>
+                        </div>
+                    {% endif %}
+
+                    <p class="patient-portal__note">Profile details are read-only in this portal. Profile editing and clinical record workflows are not available here.</p>
+                </section>
             </div>
         </div>
     </div>
 </section>
+{% endwith %}
 {% endblock %}

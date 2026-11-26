@@ -178,7 +178,7 @@ class RegistrationCredentialTests(TestCase):
         self.assertRedirects(response, reverse('patients:dashboard'))
         self.assertContains(
             self.client.get(reverse('patients:dashboard')),
-            'Your Carewell account',
+            'Patient workspace',
         )
 
     def test_staff_sign_in_redirects_to_staff_dashboard(self):
@@ -276,7 +276,11 @@ class SharedNavigationTests(TestCase):
                 response,
                 f'href="{dashboard_url}" aria-current="page">Dashboard</a>',
             )
-            self.assertContains(response, f'href="{dashboard_url}#account">Profile</a>')
+            profile_label = 'My profile' if role == User.Role.PATIENT else 'Profile'
+            self.assertContains(
+                response,
+                f'href="{dashboard_url}#account">{profile_label}</a>',
+            )
             self.assertContains(response, 'Sign out')
             self.assertNotContains(response, 'Get started')
             self.assertNotContains(response, 'My account')

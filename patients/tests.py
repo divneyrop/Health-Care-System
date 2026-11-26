@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
+from django.urls import reverse
 
 from .models import Patient
 
@@ -101,3 +102,85 @@ class PatientModelTests(TestCase):
 
         with self.assertRaises(ValidationError):
             patient.save()
+
+
+class PatientDashboardTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='portal-patient',
+            first_name='Portal',
+            last_name='Patient',
+            email='portal-patient@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.PATIENT,
+        )
+        self.dashboard_url = reverse('patients:dashboard')
+
+    def create_patient_record(self, **overrides):
+        values = {
+            'full_legal_name': 'Portal Patient',
+            'date_of_birth': date(1990, 1, 1),
+            'registered_contact_type': Patient.ContactType.EMAIL,
+            'registered_contact': 'portal-patient@example.test',
+            'portal_account': self.user,
+        }
+        values.update(overrides)
+        return Patient.objects.create(**values)
+
+    def test_dashboard_shows_only_the_signed_in_patients_linked_record(self):
+        own_record = self.create_patient_record()
+        other_user = User.objects.create_user(
+            username='another-patient',
+            email='another-patient@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.PATIENT,
+        )
+        Patient.objects.create(
+            full_legal_name='Another Patient Private Name',
+            date_of_birth=date(1985, 5, 12),
+            registered_contact_type=Patient.ContactType.PHONE,
+            registered_contact='555-0101',
+            portal_account=other_user,
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(self.dashboard_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Welcome, Portal.')
+        self.assertContains(response, 'Portal Patient')
+        self.assertContains(response, own_record.medical_record_number)
+        self.assertContains(response, 'Read-only')
+        self.assertNotContains(response, 'Another Patient Private Name')
+        self.assertNotContains(response, '555-0101')
+
+    def test_dashboard_shows_clear_empty_state_when_no_record_is_linked(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.dashboard_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No patient record is linked')
+        self.assertContains(response, 'Care activity isn’t available here yet')
+        self.assertNotContains(response, 'Medical record number')
+
+    def test_dashboard_requires_authentication(self):
+        response = self.client.get(self.dashboard_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("registration:login")}?next={self.dashboard_url}',
+        )
+
+    def test_dashboard_rejects_non_patient_roles(self):
+        doctor = User.objects.create_user(
+            username='portal-doctor',
+            email='portal-doctor@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.DOCTOR,
+        )
+        self.client.force_login(doctor)
+
+        response = self.client.get(self.dashboard_url)
+
+        self.assertRedirects(response, reverse('registration:home'))

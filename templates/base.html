@@ -34,7 +34,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'registration:home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Home</a></li>
                         {% if request.user.is_authenticated and request.user.role == 'PATIENT' %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'patients:dashboard' %}"{% if request.resolver_match.namespace == 'patients' %} aria-current="page"{% endif %}>Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'patients:dashboard' %}#account">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'patients:dashboard' %}#account">My profile</a></li>
                         {% elif request.user.is_authenticated and request.user.role == 'DOCTOR' %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'doctors:dashboard' %}"{% if request.resolver_match.namespace == 'doctors' %} aria-current="page"{% endif %}>Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'doctors:dashboard' %}#account">Profile</a></li>
@@ -42,7 +42,9 @@
                             <li class="nav-item"><a class="nav-link" href="{% url 'hospital_staff:dashboard' %}"{% if request.resolver_match.namespace == 'hospital_staff' %} aria-current="page"{% endif %}>Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'hospital_staff:dashboard' %}#account">Profile</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'registration:home' %}#services">Services</a></li>
+                        {% if not request.user.is_authenticated or request.user.role != 'PATIENT' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'registration:home' %}#services">Services</a></li>
+                        {% endif %}
                     </ul>
                     <div class="nav-account d-flex align-items-center gap-3">
                         {% if request.user.is_authenticated %}
