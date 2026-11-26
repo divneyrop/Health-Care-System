@@ -56,6 +56,7 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'registration:login'
+CSRF_FAILURE_VIEW = 'config.views.csrf_failure'
 
 ROOT_URLCONF = 'config.urls'
 

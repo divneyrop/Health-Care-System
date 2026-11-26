@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Request not completed | Carewell{% endblock %}
+
+{% block content %}
+<section class="auth-page" aria-labelledby="csrf-error-title">
+    <div class="container">
+        <div class="auth-card text-center">
+            <div class="auth-brand-mark mx-auto" aria-hidden="true">!</div>
+            <span class="eyebrow">Request protection</span>
+            <h1 class="auth-title" id="csrf-error-title">We couldn’t verify this request.</h1>
+            <p class="auth-intro">For your security, this action wasn’t completed. Return to the previous page, refresh it, and try again.</p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                <a class="btn btn-primary-soft" href="{% url 'registration:home' %}">Go to Carewell home</a>
+                <a class="btn btn-outline-primary-soft" href="{% url 'registration:login' %}">Sign in</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
