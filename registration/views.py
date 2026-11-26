@@ -11,6 +11,8 @@ from .forms import DoctorRegistrationForm, PatientRegistrationForm, StaffRegistr
 
 class RoleBasedLoginView(auth_views.LoginView):
     def get_default_redirect_url(self):
+        if self.request.user.role == User.Role.PATIENT:
+            return reverse('patients:dashboard')
         if self.request.user.role == User.Role.DOCTOR:
             return reverse('doctors:dashboard')
         if self.request.user.role == User.Role.STAFF:
