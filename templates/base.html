@@ -31,7 +31,7 @@
 
                 <div class="collapse navbar-collapse" id="primaryNavigation">
                     <ul class="navbar-nav mx-auto nav-main">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'registration:home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'registration:home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Home</a></li>
                         {% if request.user.is_authenticated and request.user.role == 'PATIENT' %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'patients:dashboard' %}"{% if request.resolver_match.namespace == 'patients' %} aria-current="page"{% endif %}>Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'patients:dashboard' %}#account">Profile</a></li>
@@ -47,14 +47,13 @@
                     <div class="nav-account d-flex align-items-center gap-3">
                         {% if request.user.is_authenticated %}
                             <span class="account-greeting d-none d-xl-inline">Hello, {{ request.user.first_name|default:request.user.username }}</span>
-                            {% if request.user.role == 'PATIENT' %}<a class="btn btn-primary-soft" href="{% url 'patients:dashboard' %}#account">My account</a>{% elif request.user.role == 'DOCTOR' %}<a class="btn btn-primary-soft" href="{% url 'doctors:dashboard' %}#account">My account</a>{% elif request.user.role == 'STAFF' %}<a class="btn btn-primary-soft" href="{% url 'hospital_staff:dashboard' %}#account">My account</a>{% endif %}
                             <form method="post" action="{% url 'registration:logout' %}">
                                 {% csrf_token %}
                                 <button class="sign-out-link" type="submit">Sign out</button>
                             </form>
                         {% else %}
-                            <a class="btn btn-outline-primary-soft" href="{% url 'registration:login' %}">Sign in</a>
-                            <a class="btn btn-primary-soft" href="{% url 'registration:register' %}">Get started <span aria-hidden="true">→</span></a>
+                            <a class="btn btn-outline-primary-soft" href="{% url 'registration:login' %}"{% if request.resolver_match.url_name == 'login' %} aria-current="page"{% endif %}>Sign in</a>
+                            <a class="btn btn-primary-soft" href="{% url 'registration:register' %}"{% if request.resolver_match.url_name == 'register' %} aria-current="page"{% endif %}>Get started <span aria-hidden="true">→</span></a>
                         {% endif %}
                     </div>
                 </div>

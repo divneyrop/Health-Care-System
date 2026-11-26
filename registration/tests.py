@@ -213,3 +213,70 @@ class RegistrationCredentialTests(TestCase):
             f'{reverse("registration:login")}?next={dashboard_url}',
         )
         self.assertContains(self.client.get(response.url), 'Sign in')
+
+    def test_sign_in_preserves_requested_destination(self):
+        User.objects.create_user(
+            username='patient-next',
+            email='patient-next@example.test',
+            password='Carewell-test-Pass-482!',
+            role=User.Role.PATIENT,
+        )
+        destination = reverse('patients:dashboard')
+
+        response = self.client.post(
+            f'{reverse("registration:login")}?next={destination}',
+            {
+                'username': 'patient-next',
+                'password': 'Carewell-test-Pass-482!',
+                'next': destination,
+            },
+        )
+
+        self.assertRedirects(response, destination)
+
+
+class SharedNavigationTests(TestCase):
+    def test_public_navigation_marks_current_auth_action(self):
+        home_response = self.client.get(reverse('registration:home'))
+        self.assertContains(home_response, 'href="/" aria-current="page">Home</a>')
+        self.assertContains(home_response, 'Sign in</a>')
+        self.assertContains(home_response, 'Get started')
+
+        login_response = self.client.get(reverse('registration:login'))
+        self.assertContains(
+            login_response,
+            f'href="{reverse("registration:login")}" aria-current="page">Sign in</a>',
+        )
+
+        registration_response = self.client.get(reverse('registration:register'))
+        self.assertContains(
+            registration_response,
+            f'href="{reverse("registration:register")}" aria-current="page">Get started',
+        )
+
+    def test_each_role_sees_its_dashboard_and_profile_navigation(self):
+        dashboards = (
+            (User.Role.PATIENT, 'patients:dashboard'),
+            (User.Role.DOCTOR, 'doctors:dashboard'),
+            (User.Role.STAFF, 'hospital_staff:dashboard'),
+        )
+
+        for index, (role, dashboard_name) in enumerate(dashboards):
+            user = User.objects.create_user(
+                username=f'nav-user-{index}',
+                email=f'nav-user-{index}@example.test',
+                password='Carewell-test-Pass-482!',
+                role=role,
+            )
+            self.client.force_login(user)
+            dashboard_url = reverse(dashboard_name)
+            response = self.client.get(dashboard_url)
+
+            self.assertContains(
+                response,
+                f'href="{dashboard_url}" aria-current="page">Dashboard</a>',
+            )
+            self.assertContains(response, f'href="{dashboard_url}#account">Profile</a>')
+            self.assertContains(response, 'Sign out')
+            self.assertNotContains(response, 'Get started')
+            self.assertNotContains(response, 'My account')
